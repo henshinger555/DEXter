@@ -1,0 +1,61 @@
+[project]
+name = "dexter"
+version = "0.1.0"
+description = "HTTP API that identifies trading cards from photos with CollectorVision"
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+dependencies = [
+    "collectorvision[hf]",
+    "fastapi>=0.115",
+    "numpy>=1.26",
+    "onnxruntime>=1.17",
+    "opencv-python-headless>=4.9",
+    "pillow>=10.0",
+    "pydantic-settings>=2.3",
+    "python-multipart>=0.0.9",
+    "uvicorn[standard]>=0.30",
+]
+
+[project.scripts]
+dexter = "dexter.app:main"
+
+[dependency-groups]
+dev = [
+    "httpx2",
+    "ipykernel",
+    "ipywidgets",
+    "mypy>=1.10",
+    "pytest>=8",
+    "ruff>=0.5",
+]
+
+# CollectorVision is not on PyPI; pin the reviewed upstream commit.
+[tool.uv.sources]
+collectorvision = { git = "https://github.com/HanClinto/CollectorVision.git", rev = "8b295ab80a997766afc00c640a616c1f2716df21" }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dexter"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["collector_vision", "collector_vision.*", "cv2"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
