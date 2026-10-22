@@ -1,0 +1,28 @@
+[Unit]
+Description=DEXter card identification API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=dexter
+Group=dexter
+WorkingDirectory=/opt/dexter/app
+EnvironmentFile=/opt/dexter/app/.env
+ExecStart=/opt/dexter/app/.venv/bin/dexter
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=300
+
+# Hardening: the service only needs to read its code and write its cache.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/dexter
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target
