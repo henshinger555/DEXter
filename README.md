@@ -24,7 +24,8 @@ and cached locally after that.
 
 - Python 3.12 or newer
 - [uv](https://docs.astral.sh/uv/)
-- About 2 GB of RAM at runtime (ONNX Runtime plus the loaded catalog)
+- About 2 GB of RAM at runtime (ONNX Runtime plus the loaded catalog), or 1 GB
+  plus a swap file (see the deployment guide)
 - Network access on first start to download models and catalogs
 
 ## Quick start
@@ -167,6 +168,13 @@ To update CollectorVision, change the `rev` under `[tool.uv.sources]` in
 [deploy/README.md](deploy/README.md) walks through running DEXter on a
 DigitalOcean droplet behind nginx with HTTPS. The same guide is available as
 [deploy/DEXter-Deployment-Guide.pdf](deploy/DEXter-Deployment-Guide.pdf).
+
+On a server, run commands as the service user with the folder change inside
+the command, for example
+`sudo -u dexter -H sh -c 'cd ~/app && ~/.local/bin/uv sync'`, where `-H` makes
+`~` the service user's home, `/opt/dexter`.
+Otherwise `sudo` keeps root's folder, `/root`, and uv stops with
+``failed to open file `/root/uv.toml`: Permission denied``.
 
 ## License
 
